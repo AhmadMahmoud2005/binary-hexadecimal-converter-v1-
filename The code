@@ -1,0 +1,83 @@
+# Validating the input
+while True:
+  try:
+    num = int(input("Enter an integer number: "))
+    break
+  except: print("An integer number only!")
+
+# Converting the negative number
+def twos_complement(number: list) -> str:
+
+  # Flipping the bits
+  for i in range(len(number)):
+    if number[i] == "0":
+      number[i] = "1"
+    elif number[i] == "1":
+      number[i] = "0"
+
+  # Adding one to the num
+  for i in reversed(range(len(number))):
+    if number[i] == "1":
+      number[i] = "0"
+    elif number[i] == "0":
+      number[i] = "1"
+      return "".join(number)
+
+# Converting decimal into binary
+def binary(number: int) -> str:
+  is_negative = False
+  int_bits = 16
+  num_list = []
+
+  # Check if number is negative
+  if number < 0:
+    number *= -1
+    is_negative = True
+
+  # Converting the number into binary
+  while number > 0:
+    remainder = str(number % 2)
+    number //= 2
+    num_list.insert(0, remainder)
+
+  # Making the number 16 bits
+  for i in range(int_bits - len(num_list)):
+    num_list.insert(0, "0")
+
+  # Dividing the number into 4 chunks
+  for i in range(4, len(num_list), 5):
+    num_list.insert(i, " ")
+
+
+  if is_negative:
+    return twos_complement(num_list)
+
+  return "".join(num_list)
+
+# Converting decimal into hexadecimal
+def hexadecimal(number: int) -> str:
+  hexa_dict = {
+    0: "0", 1: "1", 2: "2", 3: "3", 4: "4", 5: "5", 6: "6", 7: "7", 8: "8", 9: "9",
+    10: "A", 11: "B", 12: "C", 13: "D", 14: "E", 15: "F"
+  }
+  hexa_list = []
+
+  # Convert the number into binary at first
+  binary_num = binary(number)
+  
+  # Divide it into 4 chunks of bits
+  binary_chunks = binary_num.split(" ")
+
+  # Convert every chunk into a hexadecimal digit
+  for chunk in binary_chunks:
+    sum = 0
+    i = len(chunk) - 1
+    for element in chunk:
+      sum += int(element)*(2**i)
+      i -= 1
+    hexa_list.append(hexa_dict[sum])
+
+  return "".join(hexa_list)
+
+print(f"Binary: {binary(num)}")
+print(f"Hexadecimal: {hexadecimal(num)}")
